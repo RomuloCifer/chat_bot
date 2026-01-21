@@ -20,3 +20,14 @@ def find_service_by_name(name: str) -> dict | None:
         return dict(row) if row else None
     finally:
         conn.close()
+
+def find_service_by_id(service_id: int) -> dict | None:
+    conn = get_conn()
+    try:
+        row = conn.execute(
+            "SELECT id, name, duration_minutes, price_cents FROM services WHERE id = ? AND is_active = 1",
+            (service_id,),
+        ).fetchone()
+        return dict(row) if row else None
+    finally:
+        conn.close()

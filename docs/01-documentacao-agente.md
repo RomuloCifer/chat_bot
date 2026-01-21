@@ -141,3 +141,54 @@ flowchart TD
 - Não envia mensagens de marketing/promoção sem autorização do cliente.
 - Não solicita motivo de cancelamento automaticamente (para evitar mensagens extras e custos no WhatsApp).
 - Em casos complexos (reclamações, exceções, descontos), redireciona para humano.
+
+---
+
+## Interpretação de Mensagens (Hoje → Futuro)
+
+MVP (regras):
+- `services/nlu.py` com `detect_intent(message: str) -> str`
+- Estados explícitos controlam o fluxo; entrada guiada por botões quando possível
+- Entidades (data/hora/barbeiro/serviço) são coletadas passo a passo, evitando ambiguidade
+
+Futuro (LLM):
+- Substituição do módulo de NLU mantendo o contrato com o orquestrador
+- Extração de intenção e entidades em linguagem natural livre
+- Suporte a frases incompletas, múltiplas intenções, e ordem flexível
+- Fallback imediato para humano em baixa confiança
+
+Contrato proposto (compatível):
+```python
+class NLUResult(TypedDict):
+    intent: str  # ex.: BOOK_APPOINTMENT | CANCEL_APPOINTMENT | REMARK_APPOINTMENT | GREETING | UNKNOWN
+    entities: dict[str, Any]  # ex.: {"date": "2025-03-10", "time_pref": "tarde", "barber_id": 2, "service_id": 1}
+    confidence: float  # 0.0 - 1.0
+
+def analyze(message: str) -> NLUResult: ...
+```
+
+Observação: o orquestrador continuará chefeando transições de estado; o LLM não altera estados diretamente, apenas sugere intenção + entidades.
+
+---
+
+## Integração WhatsApp Cloud API (Planejado)
+
+Pontos principais:
+- Webhook de recebimento (verificação via `hub.mode`/`hub.verify_token`/`hub.challenge`)
+- Mapeamento de entrada para o formato interno (`client_id`, `message`)
+- Saída via Graph API `/messages` (texto e templates)
+- Manter a mesma máquina de estados; apenas trocar o adaptador de canal
+
+Esboço de endpoints/adaptadores:
+- Recebimento: `POST /webhook/whatsapp` → normaliza e chama `services/conversation.handle_message`
+- Envio: função utilitária que publica respostas (texto/botões) via Graph API
+
+Configuração esperada:
+- `WHATSAPP_VERIFY_TOKEN`, `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_ID`
+- Persistir `client_id` como `wa:<phone_number>` para deduplicação
+
+Boas práticas:
+- Validar assinatura do webhook (X-Hub-Signature) se ativada
+- Tratar idempotência (mensagens duplicadas)
+- Respeitar limites de taxa; usar retries exponenciais
+- Encaminhar para humano em baixa confiança ou repetidas falhas

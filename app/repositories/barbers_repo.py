@@ -20,3 +20,14 @@ def find_barber_by_name(name: str) -> dict | None:
         return dict(row) if row else None
     finally:
         conn.close()
+
+def find_barber_by_id(barber_id: int) -> dict | None:
+    conn = get_conn()
+    try:
+        row = conn.execute(
+            "SELECT id, name FROM barbers WHERE id = ? AND is_active = 1",
+            (barber_id,),
+        ).fetchone()
+        return dict(row) if row else None
+    finally:
+        conn.close()

@@ -6,6 +6,7 @@ from typing import Optional
 @dataclass
 class ConversationContext:
     """Estrutura do contexto de conversação do cliente."""
+    client_key: Optional[str] = None
     barber_id: Optional[int] = None
     barber_name: Optional[str] = None
     service_id: Optional[int] = None
@@ -14,6 +15,10 @@ class ConversationContext:
     date: Optional[str] = None  # ISO format: YYYY-MM-DD
     time_pref: Optional[str] = None  # HH:MM format
     selected_slot: Optional[str] = None  # HH:MM format (horário final escolhido)
+    # Operações de cancelamento/remarcação
+    operation: Optional[str] = None  # 'cancel' | 'remark'
+    cancel_appt_id: Optional[int] = None
+    remark_appt_id: Optional[int] = None
 
     def to_dict(self) -> dict:
         """Converte para dict, removendo None values para JSON limpo."""

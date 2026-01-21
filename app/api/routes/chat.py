@@ -73,6 +73,9 @@ def chat_web(payload: WebChatIn):
 
         # Recupera estado e contexto do cliente
         state, ctx = get_client_state_and_ctx(payload.client_id)
+        # Injeta client_key no contexto para permitir criação de appointment na service layer
+        if isinstance(ctx, dict) and "client_key" not in ctx:
+            ctx["client_key"] = payload.client_id
         
         logger.debug(f"Client state: {state}")
 

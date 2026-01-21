@@ -1,6 +1,15 @@
 # 🤖 Chatbot para Barbearia
 
-Um assistente conversacional inteligente para agendamento de horários em barbearias. Desenvolvido com **Python**, **FastAPI** e **SQLite**, com máquina de estados robusta.
+Um assistente conversacional para agendamento de horários em barbearias. Desenvolvido com **Python**, **FastAPI** e **SQLite**, com máquina de estados robusta e arquitetura preparada para **WhatsApp Cloud API** e **interpretação por IA (LLM)**.
+
+## 🎯 Objetivo
+
+Permitir que clientes marquem, remarquem ou cancelem horários de forma rápida e natural, conversando com o bot como se fosse uma pessoa — evitando dependência de palavras-chave fixas no futuro.
+
+Exemplos de uso esperado:
+
+- "Queria cortar o cabelo amanhã à tarde"
+- "Tem horário com o barbeiro 2 na sexta?"
 
 ## Características
 
@@ -12,6 +21,22 @@ Um assistente conversacional inteligente para agendamento de horários em barbea
 - ✅ **Validação de conflitos** - Impede duplo-agendamento
 - ✅ **Logging estruturado** - Rastreabilidade completa
 - ✅ **Testes automatizados** - Cobertura do fluxo principal
+
+---
+
+## 🧠 Interpretação de Mensagens (MVP e Futuro)
+
+Hoje (MVP)
+- Regras simples de intenção (detecção direta)
+- Fluxo guiado e previsível (máquina de estados)
+- Estados explícitos: `START`, `WAIT_BARBER`, `WAIT_SERVICE`, `WAIT_DATE`, `WAIT_TIME_PREF`, `WAIT_SLOT_PICK`, `WAIT_CONFIRMATION`, `CONFIRMED`
+
+Futuro (planejado)
+- Interpretação por IA (LLM): linguagem natural livre, frases incompletas ou fora de ordem, múltiplas intenções na mesma frase
+- Extração automática de intenção (agendar, cancelar, remarcar, perguntar) e entidades (data, horário, barbeiro, serviço)
+- Fallback automático para atendente humano quando necessário
+
+Importante: a IA entrará apenas como substituta do módulo de NLU, mantendo a mesma interface com o orquestrador e regras de negócio. O restante do sistema não quebra.
 
 ---
 
@@ -38,6 +63,10 @@ app/
 │   ├── availability.py # Cálculo de slots livres
 │   ├── nlu.py          # Detecção de intent
 │   └── parsers.py      # Parse de data/hora em português
+├── integrations/       # Canais de entrada/saída
+│   ├── channels/
+│   │   ├── web_chat.py  # Adaptador web (MVP)
+│   │   └── whatsapp.py  # Estrutura para WhatsApp Cloud API
 ├── core/               # Configuração global
 │   ├── config.py       # Horários de funcionamento
 │   ├── logging.py      # Logger estruturado
@@ -65,6 +94,16 @@ START
 │                 └─ (NÃO) → WAIT_BARBER
 └─ (CANCEL | REMARK) → WAIT_CLARIFICATION
 ```
+
+---
+
+## 🧩 Camadas e Responsabilidades
+
+- **Canal de entrada:** Web chat hoje; WhatsApp amanhã (via adapters em `app/integrations/channels/`)
+- **Motor de conversa:** Máquina de estados em `services/conversation.py`
+- **NLU / interpretação:** `services/nlu.py` (substituível por LLM mantendo a interface)
+- **Regras de negócio:** Disponibilidade, conflitos, horários em `services/availability.py`
+- **Persistência:** Repositórios SQLite em `app/repositories/*` (evolutivo para outros bancos)
 
 ---
 
@@ -219,6 +258,17 @@ SLOT_STEP_MINUTES = 30      # Intervalo entre slots
 
 ---
 
+## 🧭 Princípios do Projeto
+
+- **Conversa curta e objetiva:** resolver em poucos passos
+- **Sem formatação rígida:** não travar o usuário
+- **Evitar overengineering:** só o necessário para funcionar bem
+- **Código legível e evolutivo:** interfaces estáveis entre camadas
+- **Persistência de contexto:** independente do frontend
+- **UX voltada ao WhatsApp:** desde o início
+
+---
+
 ## 👨‍💼 Contribuindo
 
 Este é um projeto em produção. Ao fazer mudanças:
@@ -235,7 +285,3 @@ Este é um projeto em produção. Ao fazer mudanças:
 Para problemas, verificar:
 - `logs/` - Logs estruturados de cada módulo
 - `data.sqlite3` - Estado atual do BD (abra com SQLite browser)
-
-3. **Foque na segurança:** No setor financeiro, evitar alucinações é crítico
-4. **Teste cenários reais:** Simule perguntas que um cliente faria de verdade
-5. **Seja direto no pitch:** 3 minutos passam rápido, vá ao ponto
