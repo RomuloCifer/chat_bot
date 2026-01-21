@@ -57,3 +57,16 @@ def set_client_state_and_ctx(client_key: str, state: str, ctx: dict) -> None:
         conn.commit()
     finally:
         conn.close()
+
+
+def get_client_by_key(client_key: str) -> dict | None:
+    "Retorna um cliente pelo client_key."
+    conn = get_conn()
+    try:
+        row = conn.execute(
+            "SELECT id, client_key, name, total_cuts, total_cancels, last_appointment_at, conversation_state, conversation_ctx_json, created_at, updated_at FROM clients WHERE client_key = ?",
+            (client_key,),
+        ).fetchone()
+        return dict(row) if row else None
+    finally:
+        conn.close()

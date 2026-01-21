@@ -1,149 +1,241 @@
-# 🤖 Agente Financeiro Inteligente com IA Generativa
+# 🤖 Chatbot para Barbearia
 
-## Contexto
+Um assistente conversacional inteligente para agendamento de horários em barbearias. Desenvolvido com **Python**, **FastAPI** e **SQLite**, com máquina de estados robusta.
 
-Os assistentes virtuais no setor financeiro estão evoluindo de simples chatbots reativos para **agentes inteligentes e proativos**. Neste desafio, você vai idealizar e prototipar um agente financeiro que utiliza IA Generativa para:
+## Características
 
-- **Antecipar necessidades** ao invés de apenas responder perguntas
-- **Personalizar** sugestões com base no contexto de cada cliente
-- **Cocriar soluções** financeiras de forma consultiva
-- **Garantir segurança** e confiabilidade nas respostas (anti-alucinação)
-
-> [!TIP]
-> Na pasta [`examples/`](./examples/) você encontra referências de implementação para cada etapa deste desafio.
-
----
-
-## O Que Você Deve Entregar
-
-### 1. Documentação do Agente
-
-Defina **o que** seu agente faz e **como** ele funciona:
-
-- **Caso de Uso:** Qual problema financeiro ele resolve? (ex: consultoria de investimentos, planejamento de metas, alertas de gastos)
-- **Persona e Tom de Voz:** Como o agente se comporta e se comunica?
-- **Arquitetura:** Fluxo de dados e integração com a base de conhecimento
-- **Segurança:** Como evitar alucinações e garantir respostas confiáveis?
-
-📄 **Template:** [`docs/01-documentacao-agente.md`](./docs/01-documentacao-agente.md)
+- ✅ **Agendamento de horários** - Interface conversacional intuitiva
+- ✅ **Disponibilidade em tempo real** - Calcula slots livres considerando barbeiros, serviços e horário de almoço
+- ✅ **Máquina de estados** - Fluxo conversacional estruturado e previsível
+- ✅ **Múltiplos canais** - Web chat (pronto), WhatsApp (estrutura)
+- ✅ **Persistência de estado** - Continua conversas de onde pararam
+- ✅ **Validação de conflitos** - Impede duplo-agendamento
+- ✅ **Logging estruturado** - Rastreabilidade completa
+- ✅ **Testes automatizados** - Cobertura do fluxo principal
 
 ---
 
-### 2. Base de Conhecimento
-
-Utilize os **dados mockados** disponíveis na pasta [`data/`](./data/) para alimentar seu agente:
-
-| Arquivo | Formato | Descrição |
-|---------|---------|-----------|
-| `transacoes.csv` | CSV | Histórico de transações do cliente |
-| `historico_atendimento.csv` | CSV | Histórico de atendimentos anteriores |
-| `perfil_investidor.json` | JSON | Perfil e preferências do cliente |
-| `produtos_financeiros.json` | JSON | Produtos e serviços disponíveis |
-
-Você pode adaptar ou expandir esses dados conforme seu caso de uso.
-
-📄 **Template:** [`docs/02-base-conhecimento.md`](./docs/02-base-conhecimento.md)
-
----
-
-### 3. Prompts do Agente
-
-Documente os prompts que definem o comportamento do seu agente:
-
-- **System Prompt:** Instruções gerais de comportamento e restrições
-- **Exemplos de Interação:** Cenários de uso com entrada e saída esperada
-- **Tratamento de Edge Cases:** Como o agente lida com situações limite
-
-📄 **Template:** [`docs/03-prompts.md`](./docs/03-prompts.md)
-
----
-
-### 4. Aplicação Funcional
-
-Desenvolva um **protótipo funcional** do seu agente:
-
-- Chatbot interativo (sugestão: Streamlit, Gradio ou similar)
-- Integração com LLM (via API ou modelo local)
-- Conexão com a base de conhecimento
-
-📁 **Pasta:** [`src/`](./src/)
-
----
-
-### 5. Avaliação e Métricas
-
-Descreva como você avalia a qualidade do seu agente:
-
-**Métricas Sugeridas:**
-- Precisão/assertividade das respostas
-- Taxa de respostas seguras (sem alucinações)
-- Coerência com o perfil do cliente
-
-📄 **Template:** [`docs/04-metricas.md`](./docs/04-metricas.md)
-
----
-
-### 6. Pitch
-
-Grave um **pitch de 3 minutos** (estilo elevador) apresentando:
-
-- Qual problema seu agente resolve?
-- Como ele funciona na prática?
-- Por que essa solução é inovadora?
-
-📄 **Template:** [`docs/05-pitch.md`](./docs/05-pitch.md)
-
----
-
-## Ferramentas Sugeridas
-
-Todas as ferramentas abaixo possuem versões gratuitas:
-
-| Categoria | Ferramentas |
-|-----------|-------------|
-| **LLMs** | [ChatGPT](https://chat.openai.com/), [Copilot](https://copilot.microsoft.com/), [Gemini](https://gemini.google.com/), [Claude](https://claude.ai/), [Ollama](https://ollama.ai/) |
-| **Desenvolvimento** | [Streamlit](https://streamlit.io/), [Gradio](https://www.gradio.app/), [Google Colab](https://colab.research.google.com/) |
-| **Orquestração** | [LangChain](https://www.langchain.com/), [LangFlow](https://www.langflow.org/), [CrewAI](https://www.crewai.com/) |
-| **Diagramas** | [Mermaid](https://mermaid.js.org/), [Draw.io](https://app.diagrams.net/), [Excalidraw](https://excalidraw.com/) |
-
----
-
-## Estrutura do Repositório
+## 🏗️ Arquitetura
 
 ```
-📁 lab-agente-financeiro/
-│
-├── 📄 README.md
-│
-├── 📁 data/                          # Dados mockados para o agente
-│   ├── historico_atendimento.csv     # Histórico de atendimentos (CSV)
-│   ├── perfil_investidor.json        # Perfil do cliente (JSON)
-│   ├── produtos_financeiros.json     # Produtos disponíveis (JSON)
-│   └── transacoes.csv                # Histórico de transações (CSV)
-│
-├── 📁 docs/                          # Documentação do projeto
-│   ├── 01-documentacao-agente.md     # Caso de uso e arquitetura
-│   ├── 02-base-conhecimento.md       # Estratégia de dados
-│   ├── 03-prompts.md                 # Engenharia de prompts
-│   ├── 04-metricas.md                # Avaliação e métricas
-│   └── 05-pitch.md                   # Roteiro do pitch
-│
-├── 📁 src/                           # Código da aplicação
-│   └── app.py                        # (exemplo de estrutura)
-│
-├── 📁 assets/                        # Imagens e diagramas
-│   └── ...
-│
-└── 📁 examples/                      # Referências e exemplos
-    └── README.md
+app/
+├── api/                 # Rotas FastAPI
+│   ├── routes/
+│   │   ├── chat.py     # Endpoint de chat web
+│   │   └── health.py   # Health check
+│   └── deps.py         # Dependências
+├── domain/             # Modelos de dados
+│   ├── models.py       # ConversationContext, Appointment
+│   └── enums.py        # Estados (State)
+├── repositories/       # Acesso a dados
+│   ├── db.py           # Conexão e schema SQLite
+│   ├── clients_repo.py # Clientes
+│   ├── appointments_repo.py # Agendamentos
+│   ├── barbers_repo.py # Barbeiros
+│   └── services_repo.py # Serviços
+├── services/           # Lógica de negócio
+│   ├── conversation.py # Máquina de estados
+│   ├── availability.py # Cálculo de slots livres
+│   ├── nlu.py          # Detecção de intent
+│   └── parsers.py      # Parse de data/hora em português
+├── core/               # Configuração global
+│   ├── config.py       # Horários de funcionamento
+│   ├── logging.py      # Logger estruturado
+│   └── timezone.py     # Timezone utilities
+└── tests/              # Testes automatizados
+    └── test_conversation_happy_path.py
 ```
 
 ---
 
-## Dicas Finais
+## 🔄 Fluxo de Conversação
 
-1. **Comece pelo prompt:** Um bom system prompt é a base de um agente eficaz
-2. **Use os dados mockados:** Eles garantem consistência e evitam problemas com dados sensíveis
+A máquina de estados segue este fluxo:
+
+```
+START
+├─ (GREETING) → START
+├─ (BOOK_APPOINTMENT) → WAIT_BARBER
+│  └─ (seleciona barbeiro) → WAIT_SERVICE
+│     └─ (seleciona serviço) → WAIT_DATE
+│        └─ (informa data) → WAIT_TIME_PREF
+│           └─ (informa hora aproximada) → WAIT_SLOT_PICK
+│              └─ (escolhe horário sugerido) → WAIT_CONFIRMATION
+│                 ├─ (SIM) → CONFIRMED ✅
+│                 └─ (NÃO) → WAIT_BARBER
+└─ (CANCEL | REMARK) → WAIT_CLARIFICATION
+```
+
+---
+
+## 🚀 Começando
+
+### Instalação
+
+```bash
+cd chat_bot
+
+# Criar virtual env
+python -m venv venv
+source venv/Scripts/activate  # Windows: venv\Scripts\activate
+
+# Instalar dependências
+pip install -r requirements.txt
+```
+
+### Rodar a aplicação
+
+```bash
+uvicorn app.main:app --reload --port 8000
+```
+
+A API estará em `http://localhost:8000`
+
+### Testar
+
+```bash
+# Testes do happy path
+pytest app/tests/test_conversation_happy_path.py -v
+
+# Com cobertura
+pytest app/tests/ --cov=app --cov-report=html
+```
+
+---
+
+## 📡 API
+
+### POST `/chat/web`
+
+Envia uma mensagem de chat e recebe a resposta do bot.
+
+**Request:**
+```json
+{
+  "client_id": "user_123",
+  "message": "Oi, quero agendar um horário",
+  "state": "START"
+}
+```
+
+**Response:**
+```json
+{
+  "reply": "Olá! 👋 Bem-vindo à barbearia! Posso te ajudar a agendar, remarcar ou cancelar um horário.",
+  "state": "WAIT_BARBER",
+  "buttons": [
+    {"id": "BARBER_1", "label": "João"},
+    {"id": "BARBER_2", "label": "Carlos"}
+  ]
+}
+```
+
+### GET `/health`
+
+Health check da API.
+
+---
+
+## 🗄️ Banco de Dados
+
+SQLite com seguinte schema:
+
+### `clients`
+```
+id | client_key | name | conversation_state | conversation_ctx_json | ...
+```
+
+### `appointments`
+```
+id | client_id | barber_id | service_id | start_at | end_at | status | ...
+```
+
+### `barbers`
+```
+id | name | is_active
+```
+
+### `services`
+```
+id | name | duration_minutes | price_cents | is_active
+```
+
+---
+
+## ⚙️ Configuração
+
+Editar `app/core/config.py`:
+
+```python
+BUSINESS_START = "09:00"    # Abertura
+BUSINESS_END = "19:00"      # Fechamento
+LUNCH_START = "12:00"       # Almoço início
+LUNCH_END = "13:00"         # Almoço fim
+SLOT_STEP_MINUTES = 30      # Intervalo entre slots
+```
+
+---
+
+## 📝 Boas Práticas Implementadas
+
+✅ **Clean Code**
+- Nomes explícitos e significativos
+- Funções pequenas com responsabilidade única
+- Sem lógica "mágica"
+
+✅ **Arquitetura Limpa**
+- Separação clara entre camadas (routes → services → repositories)
+- Fácil de testar e estender
+
+✅ **Tipos Estruturados**
+- `ConversationContext` ao invés de dict solto
+- Type hints em funções críticas
+
+✅ **Segurança**
+- Validação de `client_id` (SQL injection prevention)
+- CORS configurado
+- Constraint de conflitos no BD
+
+✅ **Observabilidade**
+- Logging estruturado em pontos críticos
+- Estados de transição registrados
+- Erros detalhados
+
+✅ **Testes**
+- Cobertura do fluxo completo de agendamento
+- Casos de erro e validação
+
+---
+
+## 🔮 Próximas Funcionalidades
+
+- [ ] Integração com WhatsApp
+- [ ] Cancelamento de agendamentos via chat
+- [ ] Remarcação de horários
+- [ ] Notificações via SMS/email
+- [ ] Histórico de agendamentos do cliente
+- [ ] Rate limiting e autenticação
+- [ ] Dashboard de administração
+
+---
+
+## 👨‍💼 Contribuindo
+
+Este é um projeto em produção. Ao fazer mudanças:
+
+1. ✅ Rodar testes: `pytest`
+2. ✅ Testar fluxos manualmente
+3. ✅ Atualizar esta documentação se necessário
+4. ✅ Fazer commit com mensagem clara
+
+---
+
+## 📞 Suporte
+
+Para problemas, verificar:
+- `logs/` - Logs estruturados de cada módulo
+- `data.sqlite3` - Estado atual do BD (abra com SQLite browser)
+
 3. **Foque na segurança:** No setor financeiro, evitar alucinações é crítico
 4. **Teste cenários reais:** Simule perguntas que um cliente faria de verdade
 5. **Seja direto no pitch:** 3 minutos passam rápido, vá ao ponto

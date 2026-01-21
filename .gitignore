@@ -32,6 +32,8 @@ wheels/
 htmlcov/
 .tox/
 .hypothesis/
+*.pyc
+logs/
 
 # IDE
 .vscode/
@@ -48,12 +50,11 @@ htmlcov/
 
 # Database
 *.db
-*.sqlite
 *.sqlite3
+*.sqlite
 
 # Logs
 *.log
-logs/
 
 # OS
 Thumbs.db

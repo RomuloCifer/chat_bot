@@ -32,6 +32,8 @@ def init_db() -> None:
       total_cuts INTEGER NOT NULL DEFAULT 0,
       total_cancels INTEGER NOT NULL DEFAULT 0,
       last_appointment_at TEXT NULL,
+      conversation_state TEXT NOT NULL DEFAULT 'START',
+      conversation_ctx_json TEXT NOT NULL DEFAULT '{}',
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
