@@ -595,7 +595,7 @@ def handle_message(current_state: str, ctx: dict, message: str) -> tuple[str, st
 
     # === WAIT_CANCEL_CONFIRMATION ===
     if current_state == State.WAIT_CANCEL_CONFIRMATION:
-        if any(x in msg.lower() for x in ["sim", "confirmar", "cancelar"]) or intent == "CANCEL_APPOINTMENT":
+        if any(x in msg.lower() for x in ["sim", "confirmar", "yes", "confirm"]) or intent == "CANCEL_APPOINTMENT":
             if not ctx.cancel_appt_id:
                 return (
                     "Não encontrei o agendamento alvo. Vamos começar de novo.",
@@ -629,7 +629,7 @@ def handle_message(current_state: str, ctx: dict, message: str) -> tuple[str, st
 
     # === WAIT_REMARK_CONFIRMATION ===
     if current_state == State.WAIT_REMARK_CONFIRMATION:
-        if any(x in msg.lower() for x in ["sim", "confirmar"]) or intent == "REMARK_APPOINTMENT":
+        if any(x in msg.lower() for x in ["sim", "confirmar", "yes", "confirm"]) or intent == "REMARK_APPOINTMENT":
             # Precisa de remark_appt_id + client_key + barber/service + date + selected_slot
             if not (ctx.remark_appt_id and ctx.barber_id and ctx.service_id and ctx.date and ctx.selected_slot):
                 return (
