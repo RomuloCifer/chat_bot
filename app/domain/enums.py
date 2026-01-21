@@ -1,0 +1,5 @@
+class State:
+    START = "START"
+    WAIT_BARBER = "WAIT_BARBER"
+    WAIT_SERVICE = "WAIT_SERVICE"
+    WAIT_DATE = "WAIT_DATE"
