@@ -5,6 +5,7 @@ from app.api.routes.chat import router as chat_router
 from app.api.routes.whatsapp import router as whatsapp_router
 from app.repositories.db import init_db
 from app.core.logging import get_logger
+from app.jobs.scheduler import start_scheduler, stop_scheduler
 
 logger = get_logger(__name__)
 
@@ -26,10 +27,18 @@ def create_app() -> FastAPI:
         logger.info("Iniciando aplicação...")
         init_db()
         logger.info("Banco de dados inicializado")
+        start_scheduler()
+        logger.info("Scheduler iniciado")
 
     app.include_router(health_router, tags=["health"])
     app.include_router(chat_router, tags=["chat"])
     app.include_router(whatsapp_router, tags=["whatsapp"])
+    
+    @app.on_event("shutdown")
+    def _shutdown():
+        logger.info("Encerrando aplicação...")
+        stop_scheduler()
+        logger.info("Scheduler parado")
     
     logger.info("Rotas registradas")
     return app

@@ -310,14 +310,32 @@ def handle_message(current_state: str, ctx: dict, message: str) -> tuple[str, st
                 [],
             )
 
+        # Verifica se o horário exato solicitado está disponível (é o primeiro sugerido)
         ctx.time_pref = t.strftime("%H:%M")
+        date_obj = datetime.fromisoformat(ctx.date).date()
+        chosen_start = datetime.combine(date_obj, t, tzinfo=tz)
+        
+        if suggestions[0].strftime("%H:%M") == chosen_start.strftime("%H:%M"):
+            # Horário exato disponível! Vai direto pra confirmação
+            ctx.selected_slot = t.strftime("%H:%M")
+            return (
+                f"Perfeito! Vou agendar para {ctx.barber_name}, {ctx.service_name} no dia {ctx.date} às {ctx.selected_slot}.\nConfirma? (sim/não)",
+                State.WAIT_CONFIRMATION,
+                ctx.to_dict(),
+                [
+                    {"id": "CONFIRM_YES", "label": "Sim, confirmar"},
+                    {"id": "CONFIRM_NO", "label": "Não, voltar"},
+                ],
+            )
+        
+        # Horário não está disponível, oferece aproximados
         buttons = [
             {"id": f"SLOT_{s.strftime('%H:%M')}", "label": s.strftime("%H:%M")}
             for s in suggestions
         ]
 
         return (
-            "Tenho esses horários disponíveis. Qual você prefere?",
+            "Esse horário não está disponível. Posso sugerir estes:",
             State.WAIT_SLOT_PICK,
             ctx.to_dict(),
             buttons,
@@ -359,13 +377,32 @@ def handle_message(current_state: str, ctx: dict, message: str) -> tuple[str, st
                 ctx.to_dict(),
                 [],
             )
+        
+        # Verifica se o horário exato está disponível (remarcação)
         ctx.time_pref = t.strftime("%H:%M")
+        date_obj = datetime.fromisoformat(ctx.date).date()
+        chosen_start = datetime.combine(date_obj, t, tzinfo=tz)
+        
+        if suggestions[0].strftime("%H:%M") == chosen_start.strftime("%H:%M"):
+            # Horário exato disponível! Vai direto pra confirmação
+            ctx.selected_slot = t.strftime("%H:%M")
+            return (
+                f"Vou remarcar para {ctx.barber_name}, {ctx.service_name} no dia {ctx.date} às {ctx.selected_slot}. Confirmar?",
+                State.WAIT_REMARK_CONFIRMATION,
+                ctx.to_dict(),
+                [
+                    {"id": "REMARK_YES", "label": "Sim, remarcar"},
+                    {"id": "REMARK_NO", "label": "Não, voltar"},
+                ],
+            )
+        
+        # Horário não está disponível, oferece aproximados
         buttons = [
             {"id": f"SLOT_{s.strftime('%H:%M')}", "label": s.strftime("%H:%M")}
             for s in suggestions
         ]
         return (
-            "Tenho esses horários disponíveis. Qual você prefere?",
+            "Esse horário não está disponível. Posso sugerir estes:",
             State.WAIT_REMARK_SLOT_PICK,
             ctx.to_dict(),
             buttons,

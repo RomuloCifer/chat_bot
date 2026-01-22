@@ -46,6 +46,7 @@ def init_db() -> None:
       start_at TEXT NOT NULL,
       end_at TEXT NOT NULL,
       status TEXT NOT NULL, -- scheduled, cancelled
+      reminder_sent_at TEXT NULL, -- timestamp do último lembrete enviado
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at TEXT NOT NULL DEFAULT (datetime('now')),
       FOREIGN KEY (client_id) REFERENCES clients(id),
